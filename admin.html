@@ -1,10 +1,875 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechService - Admin Boshqaruv Paneli (Frontend Only)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Custom styles for admin panel, similar to main site but distinct */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f0f2f5;
+        }
+        #main-header.admin-header {
+            background-color: #333;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            padding: 1rem 0;
+        }
+        #main-header.admin-header .logo-link,
+        #main-header.admin-header .logo-text {
+            color: #fff;
+        }
+        #main-header.admin-header .logo-icon {
+            color: #10b981; /* Green for admin logo */
+        }
+        #main-header.admin-header .nav-link {
+            color: #bbb;
+        }
+        #main-header.admin-header .nav-link:hover {
+            color: #fff;
+        }
+        #main-header.admin-header .menu-toggle {
+            color: #fff;
+        }
+        .btn-danger {
+            background-color: #ef4444; /* Red-500 */
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #dc2626; /* Red-600 */
+        }
+
+        /* Admin specific page styles */
+        .page.hidden {
+            display: none !important; /* Force hide */
+        }
+        .form-container {
+            max-width: 450px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .form-card {
+            padding: 1.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            background-color: #f9fafb;
+        }
+        .form-group {
+            margin-bottom: 1.25rem;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        .form-group label i {
+            margin-right: 0.5rem;
+            color: #666;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="password"],
+        .form-group input[type="number"],
+        .form-group input[type="time"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+        }
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .btn-block {
+            width: 100%;
+            margin-top: 1rem;
+        }
+        .form-error-message {
+            color: #ef4444;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .admin-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .admin-card {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid #eee;
+        }
+        .admin-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #3b82f6;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .admin-card h3 i {
+            margin-right: 0.75rem;
+            font-size: 1.6rem;
+        }
+        .btn-success {
+            background-color: #22c55e; /* Green-500 */
+            color: white;
+        }
+        .btn-success:hover {
+            background-color: #16a34a; /* Green-600 */
+        }
+        .btn-info {
+            background-color: #0ea5e9; /* Sky-500 */
+            color: white;
+        }
+        .btn-info:hover {
+            background-color: #0284c7; /* Sky-600 */
+        }
+        .current-working-hours-admin {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        .current-working-hours-admin h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 0.5rem;
+        }
+        .current-working-hours-admin p {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        /* Admin Chat Management */
+        .chat-management-card {
+            margin-top: 2rem;
+        }
+        .admin-chat-messages {
+            height: 400px; /* Fixed height for admin chat view */
+            overflow-y: auto;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        /* Message bubble styles for admin view */
+        .admin-chat-messages .message {
+            max-width: 70%; /* Further narrowed for a more compact look */
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem; /* Slightly less rounded than 1rem, but still soft */
+            word-wrap: break-word;
+            font-size: 1rem;
+            line-height: 1.4;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            position: relative; /* Needed for pseudo-elements */
+        }
+
+        .admin-chat-messages .message.user {
+            background-color: #e0f2fe; /* Light blue for user messages */
+            align-self: flex-start; /* User messages on left in admin view */
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+            border-bottom-right-radius: 0.75rem;
+            border-bottom-left-radius: 0.1rem; /* Small tail on bottom-left */
+        }
+        .admin-chat-messages .message.user::before {
+            content: '';
+            position: absolute;
+            bottom: 0px; /* Adjusted to be at the bottom edge of the bubble */
+            left: -7px; /* Adjusted to overlap slightly for a cleaner look */
+            width: 0;
+            height: 0;
+            border: 8px solid transparent;
+            border-bottom-color: #e0f2fe;
+            border-left-color: #e0f2fe;
+            transform: rotate(45deg);
+            box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.05);
+            z-index: 1;
+        }
+
+
+        .admin-chat-messages .message.admin {
+            background-color: #dcfce7; /* Light green for admin replies */
+            align-self: flex-end; /* Admin replies on right in admin view */
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+            border-bottom-left-radius: 0.75rem;
+            border-bottom-right-radius: 0.1rem; /* Small tail on bottom-right */
+        }
+        .admin-chat-messages .message.admin::before {
+            content: '';
+            position: absolute;
+            bottom: 0px; /* Adjusted to be at the bottom edge of the bubble */
+            right: -7px; /* Adjusted to overlap slightly for a cleaner look */
+            width: 0;
+            height: 0;
+            border: 8px solid transparent;
+            border-bottom-color: #dcfce7;
+            border-right-color: #dcfce7;
+            transform: rotate(-45deg);
+            box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+            z-index: 1;
+        }
+
+        .admin-chat-messages .message .sender {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #4b5563; /* Gray-700 */
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+        .admin-chat-messages .message.admin .sender {
+            text-align: right;
+        }
+        .admin-chat-messages .message .timestamp {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            margin-top: 0.5rem;
+            display: block;
+        }
+        .admin-chat-messages .message.user .timestamp {
+            text-align: left;
+        }
+        .admin-chat-messages .message.admin .timestamp {
+            text-align: right;
+        }
+        .admin-chat-messages .chat-image {
+            max-width: 100%;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            display: block;
+            height: auto;
+            cursor: pointer;
+        }
+        .admin-chat-input {
+            padding-top: 0; /* Adjust padding as it's part of chat-management-card */
+            border-top: none;
+        }
+        /* Image preview container for admin */
+        .image-preview-container {
+            padding: 0.5rem 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            background-color: #f9fafb;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .image-preview-container img {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 0.5rem;
+            object-fit: cover;
+            border: 1px solid #d1d5db;
+        }
+        .image-preview-container button {
+            background: none;
+            border: none;
+            color: #ef4444; /* Red-500 */
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .image-preview-container button:hover {
+            color: #dc2626; /* Red-600 */
+        }
+
+        /* Footer */
+        #main-footer.admin-footer {
+            background-color: #222;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: auto;
+        }
+        #main-footer.admin-footer p {
+            font-size: 0.9rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #navbar {
+                flex-wrap: wrap;
+                justify-content: center; /* Center items on mobile */
+                gap: 1rem; /* Add some gap for mobile */
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                margin-top: 1rem;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .nav-links li {
+                margin: 0.5rem 0;
+                text-align: center;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .admin-dashboard {
+                grid-template-columns: 1fr;
+            }
+            .admin-chat-messages {
+                height: 300px; /* Adjust height for mobile */
+            }
+            .admin-chat-input {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            #adminReplyInput {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            .admin-chat-input .btn-send {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-$END$
+<header id="main-header" class="admin-header">
+    <div class="container">
+        <nav id="navbar">
+            <a href="admin.html" class="logo-link" data-page="admin-panel-page"> <i class="fas fa-tools logo-icon"></i> <span class="logo-text">Admin Panel</span>
+            </a>
+            <ul class="nav-links" id="navLinksAdmin">
+                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Saytga qaytish</a></li>
+                <li><button id="logoutButton" class="nav-link btn btn-danger hidden" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Chiqish</button></li>
+            </ul>
+            <button class="menu-toggle" id="menu-toggle-btn-admin" aria-label="Navigatsiya menyusini ochish/yopish">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </div>
+</header>
+
+<main id="main-content-area">
+    <div class="container">
+        <section id="admin-login-page" class="page active">
+            <div class="form-container login-form-wrapper">
+                <h2 class="section-title">Admin Kirish</h2>
+                <div class="form-card">
+                    <div class="form-group">
+                        <label for="adminUsername"><i class="fas fa-user"></i> Foydalanuvchi nomi:</label>
+                        <input type="text" id="adminUsername" placeholder="admin" value="admin">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword"><i class="fas fa-lock"></i> Parol:</label>
+                        <input type="password" id="adminPassword" placeholder="admin" value="admin">
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="handleAdminLogin()">Kirish <i class="fas fa-sign-in-alt"></i></button>
+                    <p id="loginError" class="form-error-message"></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="admin-panel-page" class="page hidden">
+            <h2 class="section-title">Admin Boshqaruv Paneli</h2>
+            <div class="admin-dashboard">
+                <div class="admin-card">
+                    <h3><i class="fas fa-plus-circle"></i> Yangi Xizmat Qo'shish</h3>
+                    <div class="form-group">
+                        <label for="serviceName">Xizmat nomi:</label>
+                        <input type="text" id="serviceName" placeholder="Masalan: Windows o'rnatish">
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceDescription">Tavsif:</label>
+                        <textarea id="serviceDescription" placeholder="Xizmat haqida batafsil ma'lumot"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="servicePrice">Narx (so'm):</label>
+                        <input type="number" id="servicePrice" placeholder="100000">
+                    </div>
+                    <button class="btn btn-success" onclick="addServiceAdmin()">Xizmat Qo'shish</button>
+                </div>
+
+                <div class="admin-card">
+                    <h3><i class="fas fa-clock"></i> Ish Vaqti Sozlamalari</h3>
+                    <div class="form-group">
+                        <label for="workDays">Ish kunlari:</label>
+                        <select id="workDays">
+                            <option value="dush-juma">Dushanba - Juma</option>
+                            <option value="dush-shan">Dushanba - Shanba</option>
+                            <option value="har-kun">Har kuni</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="startTime">Boshlanish vaqti:</label>
+                        <input type="time" id="startTime" value="09:00">
+                    </div>
+                    <div class="form-group">
+                        <label for="endTime">Tugash vaqti:</label>
+                        <input type="time" id="endTime" value="18:00">
+                    </div>
+                    <button class="btn btn-info" onclick="updateWorkingHoursAdmin()">Yangilash</button>
+                    <div class="current-working-hours-admin">
+                        <h4>Joriy Ish Vaqti:</h4>
+                        <p id="currentWorkingHoursAdmin">Yuklanmoqda...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-card chat-management-card">
+                <h3><i class="fas fa-comments"></i> Chat Xabarlari</h3>
+                <div class="admin-chat-messages" id="adminChatMessages">
+                </div>
+                <div id="imagePreviewContainerAdmin" class="image-preview-container hidden">
+                </div>
+                <div class="chat-input-area admin-chat-input">
+                    <input type="file" id="imageInputAdmin" accept="image/*" class="hidden" onchange="previewImage('Admin')">
+                    <button class="btn-icon btn-attach" title="Rasm biriktirish" onclick="document.getElementById('imageInputAdmin').click()"><i class="fas fa-paperclip"></i></button>
+                    <input type="text" id="adminReplyInput" placeholder="Javob yozing..." onkeydown="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); sendAdminReply(); }">
+                    <button class="btn btn-primary btn-send" onclick="sendAdminReply()"><i class="fas fa-paper-plane"></i> Javob Yuborish</button>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<footer id="main-footer" class="admin-footer">
+    <div class="container">
+        <p>&copy; <span id="currentYearAdmin">2025</span> TechService Admin.</p>
+    </div>
+</footer>
+
+<script>
+    // Frontend-only global data storage (not persistent, separate copy for admin.html)
+    // IMPORTANT: Data here is separate from index.html's memory. Changes in one won't reflect in the other.
+    let chatMessages = [
+        { id: 1, user: 'user', text: 'Salom, yordamingiz kerak.', imageUrl: null, timestamp: new Date(Date.now() - 60000).toLocaleString('uz-UZ', { hour12: false }) },
+        { id: 2, user: 'tech', text: 'Salom! Sizga qanday yordam bera olaman?', imageUrl: null, timestamp: new Date().toLocaleString('uz-UZ', { hour12: false }) }
+    ];
+    let servicesData = [
+        { id: 1, name: 'Windows o\'rnatish', description: 'Kompyuteringizga Windows operatsion tizimini o\'rnatish va sozlash.', price: 100000 },
+        { id: 2, name: 'Antivirus o\'rnatish', description: 'Kompyuteringizni viruslardan himoyalash uchun antivirus dasturlarini o\'rnatish.', price: 50000 }
+    ];
+    let settingsData = {
+        workingHours: { days: 'dush-juma', startTime: '09:00', endTime: '18:00' }
+    };
+
+    let menuToggleBtnAdmin;
+    let navLinksAdmin;
+    let selectedFileAdmin = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('Admin DOM yuklandi.');
+        checkLoginState();
+
+        menuToggleBtnAdmin = document.getElementById('menu-toggle-btn-admin');
+        navLinksAdmin = document.querySelector('#main-header.admin-header .nav-links');
+
+        if (menuToggleBtnAdmin && navLinksAdmin) {
+            console.log('Admin mobil menyu tugmasi va linklari topildi.');
+            menuToggleBtnAdmin.addEventListener('click', () => {
+                navLinksAdmin.classList.toggle('active');
+                const icon = menuToggleBtnAdmin.querySelector('i');
+                if (navLinksAdmin.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+        } else {
+            console.warn('Admin mobil menyu tugmasi yoki linklari topilmadi.');
+        }
+
+        const currentYearSpanAdmin = document.getElementById('currentYearAdmin');
+        if (currentYearSpanAdmin) {
+            currentYearSpanAdmin.textContent = new Date().getFullYear();
+        }
+    });
+
+    function checkLoginState() {
+        console.log('Admin login holati tekshirilmoqda.');
+        // In frontend-only, we check sessionStorage or simple hardcoded credentials
+        if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+            showAdminPanel();
+        } else {
+            showAdminLoginPage();
+        }
+    }
+
+    function showAdminLoginPage() {
+        console.log('Admin login sahifasi ko\'rsatilmoqda.');
+        document.getElementById('admin-login-page').classList.remove('hidden');
+        document.getElementById('admin-login-page').classList.add('active');
+        document.getElementById('admin-panel-page').classList.add('hidden');
+        document.getElementById('admin-panel-page').classList.remove('active');
+        document.getElementById('logoutButton').classList.add('hidden');
+    }
+
+    function showAdminPanel() {
+        console.log('Admin paneli ko\'rsatilmoqda.');
+        document.getElementById('admin-login-page').classList.add('hidden');
+        document.getElementById('admin-login-page').classList.remove('active');
+        document.getElementById('admin-panel-page').classList.remove('hidden');
+        document.getElementById('admin-panel-page').classList.add('active');
+        document.getElementById('logoutButton').classList.remove('hidden');
+        loadAdminPanelData();
+    }
+
+    function handleAdminLogin() {
+        console.log('Admin login urinishi...');
+        const username = document.getElementById('adminUsername').value;
+        const password = document.getElementById('adminPassword').value;
+        const loginErrorP = document.getElementById('loginError');
+        loginErrorP.textContent = '';
+
+        // Simple hardcoded login for frontend-only
+        if (username === 'admin' && password === 'admin') {
+            console.log('Admin muvaffaqiyatli kirdi.');
+            sessionStorage.setItem('isAdminLoggedIn', 'true'); // Simulate login state
+            showAdminPanel();
+            // In a real app, this would be a server fetch
+        } else {
+            console.warn('Admin login xatosi: noto\'g\'ri login/parol');
+            showCustomModal('Login yoki parol xato.');
+            sessionStorage.removeItem('isAdminLoggedIn');
+        }
+    }
+
+    function adminLogout() {
+        console.log('Admin tizimdan chiqmoqda.');
+        sessionStorage.removeItem('isAdminLoggedIn');
+        showAdminLoginPage();
+        showCustomModal('Tizimdan chiqdingiz.');
+    }
+
+    function loadAdminPanelData() {
+        if (sessionStorage.getItem('isAdminLoggedIn') !== 'true') return;
+        console.log('Admin paneli ma\'lumotlari yuklanmoqda...');
+        loadAdminChatMessages();
+        loadCurrentWorkingHoursForAdmin();
+        setTimeout(() => {
+            const chatContainer = document.getElementById('adminChatMessages');
+            if(chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
+        }, 200);
+    }
+
+    function addServiceAdmin() {
+        console.log('Yangi xizmat qo\'shish urinishi...');
+        const name = document.getElementById('serviceName').value.trim();
+        const description = document.getElementById('serviceDescription').value.trim();
+        const priceText = document.getElementById('servicePrice').value;
+        const price = parseInt(priceText);
+
+        if (!name || !description || !priceText || isNaN(price) || price <= 0) {
+            showCustomModal('Barcha maydonlarni to\'g\'ri to\'ldiring! Narx musbat son bo\'lishi kerak.');
+            return;
+        }
+
+        const newService = {
+            id: Date.now(),
+            name: name,
+            description: description,
+            price: price
+        };
+        servicesData.push(newService); // Add to in-memory array
+        showCustomModal('Yangi xizmat muvaffaqiyatli qo\'shildi!');
+        document.getElementById('serviceName').value = '';
+        document.getElementById('serviceDescription').value = '';
+        document.getElementById('servicePrice').value = '';
+        console.log('Mavjud xizmatlar (xotirada):', servicesData);
+    }
+
+    function updateWorkingHoursAdmin() {
+        console.log('Ish vaqtini yangilash urinishi...');
+        const days = document.getElementById('workDays').value;
+        const startTime = document.getElementById('startTime').value;
+        const endTime = document.getElementById('endTime').value;
+
+        if (!days || !startTime || !endTime) {
+            showCustomModal('Ish vaqti uchun barcha maydonlarni to\'g\'ri to\'ldiring!');
+            return;
+        }
+
+        settingsData.workingHours = { days, startTime, endTime }; // Update in-memory object
+        showCustomModal('Ish vaqti muvaffaqiyatli yangilandi!');
+        loadCurrentWorkingHoursForAdmin(); // Reload to display updated hours
+        console.log('Ish vaqti yangilandi (xotirada):', settingsData.workingHours);
+    }
+
+    function loadCurrentWorkingHoursForAdmin() {
+        console.log('Admin uchun joriy ish vaqti yuklanmoqda...');
+        const display = document.getElementById('currentWorkingHoursAdmin');
+        const daysSelect = document.getElementById('workDays');
+        const startTimeInput = document.getElementById('startTime');
+        const endTimeInput = document.getElementById('endTime');
+
+        if (!display || !daysSelect || !startTimeInput || !endTimeInput) {
+            console.error('Ish vaqti uchun DOM elementlari topilmadi.');
+            return;
+        }
+
+        const wh = settingsData.workingHours; // Get from in-memory data
+        const daysText = {
+            'dush-juma': 'Dushanba - Juma',
+            'dush-shan': 'Dushanba - Shanba',
+            'har-kun': 'Har kuni'
+        };
+        display.textContent = `${daysText[wh.days] || wh.days || 'Noma\'lum'}: ${wh.startTime || '--:--'} - ${wh.endTime || '--:--'}`;
+
+        if(wh.days) daysSelect.value = wh.days;
+        if(wh.startTime) startTimeInput.value = wh.startTime;
+        if(wh.endTime) endTimeInput.value = wh.endTime;
+    }
+
+    function previewImage(userTypeSuffix) {
+        console.log(`[previewImage AdminJS] chaqirildi: ${userTypeSuffix} uchun`);
+        const fileInput = document.getElementById(`imageInput${userTypeSuffix}`);
+        const previewContainer = document.getElementById(`imagePreviewContainer${userTypeSuffix}`);
+
+        if (!fileInput || !previewContainer) {
+            console.error(`[previewImage AdminJS] Elementlar topilmadi: imageInput${userTypeSuffix} yoki imagePreviewContainer${userTypeSuffix}`);
+            return;
+        }
+
+        if (fileInput.files && fileInput.files[0]) {
+            const file = fileInput.files[0];
+            console.log(`[previewImage AdminJS] Fayl tanlandi: ${file.name}`);
+
+            if (!file.type.startsWith('image/')) {
+                showCustomModal('Faqat rasm fayllarini yuklashingiz mumkin (masalan, PNG, JPG, GIF).');
+                fileInput.value = '';
+                clearImagePreview(userTypeSuffix);
+                return;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                showCustomModal('Rasm hajmi 5MB dan katta boʻlmasligi kerak.');
+                fileInput.value = '';
+                clearImagePreview(userTypeSuffix);
+                return;
+            }
+
+            selectedFileAdmin = file;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewContainer.innerHTML = `
+                    <img src="${e.target.result}" alt="Tanlangan rasm" class="max-w-xs max-h-24 rounded-lg object-cover border border-gray-300">
+                    <span class="text-sm text-gray-600">${file.name.length > 20 ? file.name.substring(0,17)+'...' : file.name} (${(file.size / 1024).toFixed(1)} KB)</span>
+                    <button type="button" class="text-red-500 hover:text-red-700 transition-colors duration-200" onclick="clearImagePreview('${userTypeSuffix}')" title="Rasmni olib tashlash">
+                        <i class="fas fa-times-circle"></i>
+                    </button>
+                `;
+                previewContainer.classList.remove('hidden');
+            }
+            reader.readAsDataURL(file); // Convert image to Base64
+        } else {
+            clearImagePreview(userTypeSuffix);
+        }
+    }
+
+    function clearImagePreview(userTypeSuffix) {
+        console.log(`[clearImagePreview AdminJS] chaqirildi: ${userTypeSuffix} uchun`);
+        const fileInput = document.getElementById(`imageInput${userTypeSuffix}`);
+        const previewContainer = document.getElementById(`imagePreviewContainer${userTypeSuffix}`);
+
+        if(fileInput) fileInput.value = '';
+        selectedFileAdmin = null;
+
+        if(previewContainer) {
+            previewContainer.classList.add('hidden');
+            previewContainer.innerHTML = '';
+        }
+    }
+
+    function loadAdminChatMessages() {
+        const container = document.getElementById('adminChatMessages');
+        if (!container) {
+            console.error('[loadAdminChatMessages] adminChatMessages elementi topilmadi.');
+            return;
+        }
+
+        const isScrolledToBottom = container.scrollHeight - container.clientHeight <= container.scrollTop + 10;
+        container.innerHTML = '';
+
+        if (!chatMessages || chatMessages.length === 0) {
+            container.innerHTML = '<p class="text-gray-600 text-center">Hozircha xabarlar yo\'q</p>';
+        } else {
+            chatMessages.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', msg.user === 'user' ? 'user' : 'admin');
+
+                let messageContent = `<span class="sender">${msg.user === 'user' ? 'Foydalanuvchi' : 'Siz (Admin)'}</span>`;
+                if (msg.text) {
+                    const linkedText = msg.text.replace(/(https?:\/\/[^\s!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">$1</a>');
+                    messageContent += `<div class="message-text mb-1" style="white-space: pre-wrap;">${linkedText}</div>`;
+                }
+                if (msg.imageUrl) {
+                    messageContent += `<img src="${msg.imageUrl}" alt="Chatdagi rasm" class="chat-image cursor-pointer w-full h-auto object-cover rounded-lg" onclick="openImageModal('${msg.imageUrl}')" onerror="this.onerror=null;this.src='https://placehold.co/150x100/FF0000/FFFFFF?text=Rasm+Yuklanmadi';">`;
+                }
+                const displayTimestamp = msg.timestamp || new Date(msg.id).toLocaleTimeString('uz-UZ', {hour: '2-digit', minute: '2-digit'});
+                messageContent += `<span class="timestamp text-xs text-gray-500 mt-1 block ${msg.user === 'admin' ? 'text-right' : 'text-left'}">${displayTimestamp}</span>`;
+
+                messageDiv.innerHTML = messageContent;
+                container.appendChild(messageDiv);
+            });
+        }
+
+        if (isScrolledToBottom || chatMessages.length < 5) {
+            container.scrollTop = container.scrollHeight;
+        }
+    }
+
+    function sendAdminReply() {
+        console.log('Admin javob yuborish urinishi...');
+        const textInput = document.getElementById('adminReplyInput');
+        const text = textInput.value.trim();
+
+        if (!text && !selectedFileAdmin) {
+            console.log('Admin javobi uchun matn yoki rasm yo\'q.');
+            showCustomModal('Javob yoki rasm bo\'lishi shart!');
+            return;
+        }
+
+        const newMessage = {
+            id: Date.now(),
+            user: 'admin',
+            text: text || null,
+            imageUrl: null,
+            timestamp: new Date().toLocaleString('uz-UZ', { hour12: false })
+        };
+
+        if (selectedFileAdmin) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                newMessage.imageUrl = e.target.result; // Store Base64 string
+                chatMessages.push(newMessage); // Add to in-memory array
+                textInput.value = '';
+                clearImagePreview('Admin');
+                loadAdminChatMessages();
+                const chatContainer = document.getElementById('adminChatMessages');
+                if(chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+            reader.readAsDataURL(selectedFileAdmin);
+        } else {
+            chatMessages.push(newMessage); // Add to in-memory array
+            textInput.value = '';
+            clearImagePreview('Admin');
+            loadAdminChatMessages();
+            const chatContainer = document.getElementById('adminChatMessages');
+            if(chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    }
+
+    function openImageModal(imageUrl) {
+        console.log('[openImageModal AdminJS] chaqirildi, URL:', imageUrl);
+        const modal = document.createElement('div');
+        modal.style.position = 'fixed';
+        modal.style.left = '0';
+        modal.style.top = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.backgroundColor = 'rgba(0,0,0,0.85)';
+        modal.style.display = 'flex';
+        modal.style.justifyContent = 'center';
+        modal.style.alignItems = 'center';
+        modal.style.zIndex = '2000';
+        modal.style.cursor = 'zoom-out';
+        modal.onclick = (e) => {
+            if (e.target === modal) {
+                document.body.removeChild(modal);
+                console.log('[openImageModal AdminJS] Modal yopildi.');
+            }
+        };
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.style.maxWidth = '90%';
+        img.style.maxHeight = '90%';
+        img.style.border = '3px solid white';
+        img.style.borderRadius = '5px';
+        img.style.boxShadow = '0 0 25px rgba(0,0,0,0.5)';
+        img.style.objectFit = 'contain';
+        img.style.cursor = 'default';
+
+        modal.appendChild(img);
+        document.body.appendChild(modal);
+        console.log('[openImageModal AdminJS] Modal ko\'rsatildi.');
+    }
+
+    function showCustomModal(message, callback = null, infoOnly = false) {
+        const existingModal = document.getElementById('custom-alert-modal');
+        if (existingModal) existingModal.remove();
+
+        const modal = document.createElement('div');
+        modal.id = 'custom-alert-modal';
+        modal.className = 'fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[9999] p-4';
+        modal.innerHTML = `
+            <div class="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full text-center transform scale-95 opacity-0 transition-all duration-300 ease-out">
+                <p class="text-lg font-semibold text-gray-800 mb-6">${message}</p>
+                <div class="flex justify-center space-x-4">
+                    ${infoOnly ? `
+                        <button id="modal-ok-btn" class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200">OK</button>
+                    ` : `
+                        <button id="modal-confirm-btn" class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200">Tasdiqlash</button>
+                        <button id="modal-cancel-btn" class="px-6 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors duration-200">Bekor qilish</button>
+                    `}
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        setTimeout(() => {
+            modal.querySelector('div').classList.remove('scale-95', 'opacity-0');
+            modal.querySelector('div').classList.add('scale-100', 'opacity-100');
+        }, 10);
+
+        const closeAndCallback = (result) => {
+            modal.querySelector('div').classList.remove('scale-100', 'opacity-100');
+            modal.querySelector('div').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.remove();
+                if (callback) callback(result);
+            }, 300);
+        };
+
+        if (infoOnly) {
+            document.getElementById('modal-ok-btn').onclick = () => closeAndCallback(true);
+        } else {
+            document.getElementById('modal-confirm-btn').onclick = () => closeAndCallback(true);
+            document.getElementById('modal-cancel-btn').onclick = () => closeAndCallback(false);
+        }
+    }
+</script>
 </body>
 </html>

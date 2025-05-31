@@ -1,10 +1,952 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechService - Professional Kompyuter Xizmatlari (Frontend Only)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Custom styles to ensure proper layout and responsiveness */
+        body {
+            font-family: 'Open Sans', sans-serif; /* Using Open Sans as per your link */
+            background-color: #f0f2f5;
+        }
+        #main-header {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+        }
+        #navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        .logo-link {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            text-decoration: none;
+        }
+        .logo-icon {
+            color: #3b82f6; /* Blue-600 */
+            margin-right: 0.5rem;
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+        .nav-link {
+            text-decoration: none;
+            color: #555;
+            font-weight: 600;
+            transition: color 0.2s ease-in-out;
+        }
+        .nav-link:hover {
+            color: #3b82f6;
+        }
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary:hover {
+            background-color: #2563eb;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+        }
+        .btn-cta {
+            background-color: #10b981; /* Green-500 */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-cta:hover {
+            background-color: #059669; /* Green-600 */
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        .btn-cta i {
+            margin-left: 0.5rem;
+        }
+        .menu-toggle {
+            display: none; /* Hidden on desktop */
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #555;
+        }
+
+        /* Main Content Area */
+        #main-content-area {
+            flex-grow: 1;
+            padding: 2rem 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Home Section */
+        .hero-section {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+        .hero-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .working-hours-display-card {
+            background-color: #f8f8f8;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e0e0;
+        }
+        .working-hours-display-card h3 {
+            font-size: 1.4rem;
+            color: #3b82f6;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .working-hours-display-card h3 i {
+            margin-right: 0.75rem;
+            font-size: 1.6rem;
+        }
+        .working-hours-display-card p {
+            font-size: 1.1rem;
+            color: #555;
+            font-weight: 600;
+        }
+
+        /* Services Section */
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        .service-card {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #eee;
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+        }
+        .service-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #3b82f6;
+            margin-bottom: 1rem;
+        }
+        .service-card p {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.6;
+        }
+        .service-card .price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #10b981;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Chat Section */
+        .chat-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 60vh; /* Adjust as needed */
+        }
+        .chat-container {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 700px;
+            display: flex;
+            flex-direction: column;
+            height: 70vh; /* Fixed height for chat area */
+            overflow: hidden;
+        }
+        .chat-header {
+            background-color: #3b82f6; /* Blue-600 */
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
+        }
+        .chat-header h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .chat-header h3 i {
+            margin-right: 0.75rem;
+        }
+        .chat-header p {
+            font-size: 0.9rem;
+            color: #e0e0e0;
+        }
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            background-color: #f9fafb;
+        }
+        .message-bubble {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            word-wrap: break-word;
+            font-size: 1rem;
+            line-height: 1.4;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+        .message-bubble.user {
+            background-color: #e0f2fe; /* Light blue */
+            align-self: flex-end;
+            border-bottom-right-radius: 0.25rem; /* Pointy corner */
+        }
+        .message-bubble.tech {
+            background-color: #ffffff;
+            align-self: flex-start;
+            border: 1px solid #e5e7eb;
+            border-bottom-left-radius: 0.25rem; /* Pointy corner */
+        }
+        .message-bubble .timestamp {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            margin-top: 0.5rem;
+            text-align: right;
+            display: block;
+        }
+        .message-bubble.tech .timestamp {
+            text-align: left;
+        }
+        .message-bubble img {
+            max-width: 100%;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            display: block; /* Ensures it takes full width and new line */
+            height: auto; /* Maintain aspect ratio */
+        }
+        .chat-input-area {
+            padding: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background-color: #ffffff;
+        }
+        #messageInputUser {
+            flex-grow: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+        #messageInputUser:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+        }
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #6b7280;
+            font-size: 1.25rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .btn-icon:hover {
+            background-color: #e5e7eb;
+            color: #3b82f6;
+        }
+        .btn-send {
+            padding: 0.75rem 1.25rem;
+            font-size: 1rem;
+            background-color: #3b82f6;
+            color: white;
+            border-radius: 0.5rem;
+            font-weight: 600;
+        }
+        .btn-send i {
+            margin-right: 0.5rem;
+        }
+        .image-preview-container {
+            padding: 0.5rem 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            background-color: #f9fafb;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .image-preview-container img {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 0.5rem;
+            object-fit: cover;
+            border: 1px solid #d1d5db;
+        }
+        .image-preview-container button {
+            background: none;
+            border: none;
+            color: #ef4444; /* Red-500 */
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .image-preview-container button:hover {
+            color: #dc2626; /* Red-600 */
+        }
+
+        /* Footer */
+        #main-footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: auto;
+        }
+        #main-footer p {
+            font-size: 0.9rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #navbar {
+                flex-wrap: wrap;
+            }
+            .nav-links {
+                display: none; /* Hidden by default on mobile */
+                flex-direction: column;
+                width: 100%;
+                margin-top: 1rem;
+            }
+            .nav-links.active {
+                display: flex; /* Show when active */
+            }
+            .nav-links li {
+                margin: 0.5rem 0;
+                text-align: center;
+            }
+            .menu-toggle {
+                display: block; /* Show on mobile */
+            }
+            .hero-title {
+                font-size: 2rem;
+            }
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .chat-container {
+                height: 80vh; /* Adjust height for mobile */
+            }
+            .chat-input-area {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            #messageInputUser {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            .btn-send {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-$END$
+<header id="main-header">
+    <div class="container">
+        <nav id="navbar">
+            <a href="#" class="logo-link" data-page="home">
+                <i class="fas fa-laptop-code logo-icon"></i> <span class="logo-text">TechService</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#" class="nav-link" data-page="home">Bosh sahifa</a></li>
+                <li><a href="#" class="nav-link" data-page="services">Xizmatlar</a></li>
+                <li><a href="#" class="nav-link" data-page="chat">Chat</a></li>
+                <li><a href="admin.html" class="nav-link btn btn-primary">Admin Panel</a></li>
+            </ul>
+            <button class="menu-toggle" id="menu-toggle-btn" aria-label="Navigatsiya menyusini ochish/yopish">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </div>
+</header>
+
+<main id="main-content-area">
+    <div class="container">
+        <section id="home" class="page active">
+            <div class="hero-section">
+                <h1 class="hero-title">Kompleks Kompyuter Yechimlari</h1>
+                <p class="hero-subtitle">Sizning texnologik ehtiyojlaringiz uchun professional xizmatlar.</p>
+                <button class="btn btn-cta" onclick="showPage('services')">Xizmatlarimizni Ko'ring <i class="fas fa-arrow-right"></i></button>
+            </div>
+            <div class="working-hours-display-card">
+                <h3><i class="far fa-clock"></i> Bizning Ish Vaqtimiz:</h3>
+                <p id="currentWorkingHoursUser">Yuklanmoqda...</p>
+            </div>
+        </section>
+
+        <section id="services" class="page">
+            <h2 class="section-title">Biz Taklif Etadigan Xizmatlar</h2>
+            <div class="services-grid" id="servicesGrid">
+                <p>Xizmatlar yuklanmoqda...</p>
+            </div>
+        </section>
+
+        <section id="chat" class="page">
+            <h2 class="section-title">Jonli Yordam Chat</h2>
+            <div class="chat-wrapper">
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <h3><i class="far fa-comments"></i> Texnik Yordam</h3>
+                        <p>Savollaringiz bo'lsa, bizga yozing!</p>
+                    </div>
+                    <div class="chat-messages" id="chatMessagesUser">
+                    </div>
+                    <div id="imagePreviewContainerUser" class="image-preview-container hidden">
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="file" id="imageInputUser" accept="image/*" class="hidden" onchange="previewImage('User')">
+                        <button class="btn-icon btn-attach" title="Rasm biriktirish" onclick="document.getElementById('imageInputUser').click()"><i class="fas fa-paperclip"></i></button>
+                        <input type="text" id="messageInputUser" placeholder="Xabaringizni yozing..." onkeydown="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); sendMessageUser(); }">
+                        <button class="btn btn-primary btn-send" onclick="sendMessageUser()"><i class="fas fa-paper-plane"></i> Yuborish</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<footer id="main-footer">
+    <div class="container">
+        <p>&copy; <span id="currentYear">2025</span> TechService.</p>
+    </div>
+</footer>
+
+<script>
+    // Frontend-only global data storage (not persistent)
+    let chatMessages = [
+        { id: 1, user: 'tech', text: 'Salom! Sizga qanday yordam bera olaman?', imageUrl: null, timestamp: new Date().toLocaleString('uz-UZ', { hour12: false }) }
+    ];
+    let servicesData = [
+        { id: 1, name: 'Windows o\'rnatish', description: 'Kompyuteringizga Windows operatsion tizimini o\'rnatish va sozlash.', price: 100000 },
+        { id: 2, name: 'Antivirus o\'rnatish', description: 'Kompyuteringizni viruslardan himoyalash uchun antivirus dasturlarini o\'rnatish.', price: 50000 },
+        { id: 3, name: 'Drayver o\'rnatish', description: 'Qurilmalaringiz uchun kerakli drayverlarni topish va o\'rnatish.', price: 30000 },
+        { id: 4, name: 'Kompyuter tozalash', description: 'Kompyuteringizni keraksiz fayllardan tozalash va ishlashini tezlashtirish.', price: 40000 }
+    ];
+    let settingsData = {
+        workingHours: { days: 'dush-juma', startTime: '09:00', endTime: '18:00' }
+    };
+
+
+    let menuToggleBtn;
+    let navLinks;
+    let currentVisiblePage = 'home';
+    let selectedFileUser = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOM to\'liq yuklandi va tahlil qilindi.');
+
+        menuToggleBtn = document.getElementById('menu-toggle-btn');
+        navLinks = document.querySelector('#navbar .nav-links');
+
+        const navElements = document.querySelectorAll('#navbar .nav-link[data-page], #navbar .logo-link[data-page]');
+        console.log('Navigatsiya elementlari topildi:', navElements.length, navElements);
+
+        navElements.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                const pageId = this.getAttribute('data-page');
+                console.log('Navigatsiya linki bosildi, pageId:', pageId, 'Element:', this);
+                showPage(pageId);
+
+                if (navLinks && navLinks.classList.contains('active') && menuToggleBtn) {
+                    navLinks.classList.remove('active');
+                    const icon = menuToggleBtn.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                    menuToggleBtn.setAttribute('aria-expanded', 'false');
+                    console.log('Mobil menyu yopildi (link bosilganda).');
+                }
+            });
+        });
+
+        if (menuToggleBtn && navLinks) {
+            console.log('Mobil menyu tugmasi va linklari topildi.');
+            menuToggleBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                const icon = menuToggleBtn.querySelector('i');
+                if (navLinks.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                    menuToggleBtn.setAttribute('aria-expanded', 'true');
+                    console.log('Mobil menyu ochildi.');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                    menuToggleBtn.setAttribute('aria-expanded', 'false');
+                    console.log('Mobil menyu yopildi (toggle orqali).');
+                }
+            });
+        } else {
+            console.warn('Mobil menyu tugmasi yoki linklari topilmadi.');
+        }
+
+        console.log('Boshlang\'ich sozlamalar boshlanmoqda...');
+        showPage('home');
+        loadWorkingHoursUser();
+
+        const currentYearSpan = document.getElementById('currentYear');
+        if (currentYearSpan) {
+            currentYearSpan.textContent = new Date().getFullYear();
+        }
+    });
+
+    function showPage(pageId) {
+        console.log('[showPage] Funksiya chaqirildi, pageId:', pageId);
+
+        if (!pageId) {
+            console.warn('[showPage] pageId bo\'sh. "home" ga o\'rnatilmoqda.');
+            pageId = 'home';
+        }
+
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+        });
+        console.log('[showPage] Barcha .page elementlari yashirildi.');
+
+        const targetPage = document.getElementById(pageId);
+        if (targetPage) {
+            targetPage.classList.add('active');
+            currentVisiblePage = pageId;
+            console.log(`[showPage] Sahifa #${pageId} aktivlashtirildi.`);
+        } else {
+            console.error(`[showPage] ID si "${pageId}" bo'lgan .page elementi topilmadi! Bosh sahifa ko'rsatilmoqda.`);
+            const homePage = document.getElementById('home');
+            if (homePage) {
+                homePage.classList.add('active');
+                currentVisiblePage = 'home';
+            } else {
+                console.error("[showPage] Hatto 'home' sahifasi ham topilmadi! HTML strukturasini tekshiring.");
+            }
+        }
+
+        document.querySelectorAll('#navbar .nav-links .nav-link[data-page]').forEach(link => {
+            link.classList.remove('active-link');
+            link.classList.remove('border-b-2', 'border-blue-600', 'pb-1', 'text-blue-600');
+            link.classList.add('text-gray-600');
+
+            if (link.getAttribute('data-page') === currentVisiblePage) {
+                link.classList.add('active-link', 'border-b-2', 'border-blue-600', 'pb-1', 'text-blue-600');
+                link.classList.remove('text-gray-600');
+            }
+        });
+        const logoLink = document.querySelector('#navbar .logo-link[data-page]');
+        if (logoLink) {
+            logoLink.classList.remove('active-link');
+        }
+        console.log('[showPage] Navigatsiya linklaridagi "active-link" yangilandi.');
+
+        if (currentVisiblePage === 'services') {
+            console.log('[showPage] Xizmatlar uchun ma\'lumotlar yuklanmoqda...');
+            loadServicesForUser();
+        } else if (currentVisiblePage === 'chat') {
+            console.log('[showPage] Chat xabarlari yuklanmoqda...');
+            loadChatMessagesUser();
+            setTimeout(() => {
+                const chatContainer = document.getElementById('chatMessagesUser');
+                if(chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 200);
+        }
+    }
+
+    function loadServicesForUser() {
+        console.log('[loadServicesForUser] chaqirildi');
+        const grid = document.getElementById('servicesGrid');
+        if (!grid) {
+            console.error('[loadServicesForUser] servicesGrid elementi topilmadi.');
+            return;
+        }
+        grid.innerHTML = '';
+
+        if (!servicesData || servicesData.length === 0) {
+            grid.innerHTML = '<p class="text-gray-600 text-center">Hozircha xizmatlar mavjud emas.</p>';
+            return;
+        }
+
+        servicesData.forEach(service => {
+            const card = document.createElement('div');
+            card.className = 'service-card';
+            const escapedServiceName = service.name.replace(/'/g, "\\'").replace(/"/g, '\\"');
+            card.innerHTML = `
+                <h3>${service.name}</h3>
+                <p>${service.description}</p>
+                <div class="price">${service.price.toLocaleString()} so'm</div>
+                <button class="btn btn-primary" onclick="purchaseService(${service.id}, '${escapedServiceName}', ${service.price})">Sotib Olish</button>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function purchaseService(serviceId, serviceName, servicePrice) {
+        console.log(`[purchaseService] chaqirildi: ID ${serviceId}, Nomi ${serviceName}`);
+        showCustomModal(`"${serviceName}" xizmatini (${servicePrice.toLocaleString()} so'm) sotib olishni tasdiqlaysizmi?`, (confirmed) => {
+            if (!confirmed) {
+                console.log('[purchaseService] Sotib olish bekor qilindi.');
+                return;
+            }
+
+            showCustomModal(`"${serviceName}" xizmati uchun buyurtma qabul qilindi! Tez orada siz bilan bog'lanamiz.`, null, true);
+
+            const messageText = `Men "${serviceName}" xizmatini (${servicePrice.toLocaleString()} so'm) sotib olmoqchiman. Xizmat ID: ${serviceId}`;
+
+            // Simulate sending message to chat (in-memory)
+            const newMessage = {
+                id: Date.now(),
+                user: 'user',
+                text: messageText,
+                imageUrl: null,
+                timestamp: new Date().toLocaleString('uz-UZ', { hour12: false })
+            };
+            chatMessages.push(newMessage);
+            console.log('[purchaseService] Buyurtma xabari chatga yuborildi (xotirada).');
+            showPage('chat');
+        });
+    }
+
+    function previewImage(userTypeSuffix) {
+        console.log(`[previewImage] chaqirildi: ${userTypeSuffix} uchun`);
+        const fileInput = document.getElementById(`imageInput${userTypeSuffix}`);
+        const previewContainer = document.getElementById(`imagePreviewContainer${userTypeSuffix}`);
+
+        if (!fileInput || !previewContainer) {
+            console.error(`[previewImage] Elementlar topilmadi: imageInput${userTypeSuffix} yoki imagePreviewContainer${userTypeSuffix}`);
+            return;
+        }
+
+        if (fileInput.files && fileInput.files[0]) {
+            const file = fileInput.files[0];
+            console.log(`[previewImage] Fayl tanlandi: ${file.name}, ${file.size} bayt`);
+
+            if (!file.type.startsWith('image/')) {
+                showCustomModal('Faqat rasm fayllarini yuklashingiz mumkin (masalan, PNG, JPG, GIF).');
+                fileInput.value = '';
+                clearImagePreview(userTypeSuffix);
+                return;
+            }
+            if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                showCustomModal('Rasm hajmi 5MB dan katta boʻlmasligi kerak.');
+                fileInput.value = '';
+                clearImagePreview(userTypeSuffix);
+                return;
+            }
+
+            selectedFileUser = file;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewContainer.innerHTML = `
+                    <img src="${e.target.result}" alt="Tanlangan rasm" class="max-w-xs max-h-24 rounded-lg object-cover border border-gray-300">
+                    <span class="text-sm text-gray-600">${file.name.length > 20 ? file.name.substring(0,17)+'...' : file.name} (${(file.size / 1024).toFixed(1)} KB)</span>
+                    <button type="button" class="text-red-500 hover:text-red-700 transition-colors duration-200" onclick="clearImagePreview('${userTypeSuffix}')" title="Rasmni olib tashlash">
+                        <i class="fas fa-times-circle"></i>
+                    </button>
+                `;
+                previewContainer.classList.remove('hidden');
+            }
+            reader.readAsDataURL(file); // Convert image to Base64
+        } else {
+            console.log(`[previewImage] Fayl tanlanmadi yoki bekor qilindi: ${userTypeSuffix} uchun`);
+            clearImagePreview(userTypeSuffix);
+        }
+    }
+
+    function clearImagePreview(userTypeSuffix) {
+        console.log(`[clearImagePreview] chaqirildi: ${userTypeSuffix} uchun`);
+        const fileInput = document.getElementById(`imageInput${userTypeSuffix}`);
+        const previewContainer = document.getElementById(`imagePreviewContainer${userTypeSuffix}`);
+
+        if(fileInput) fileInput.value = '';
+        selectedFileUser = null;
+
+        if(previewContainer) {
+            previewContainer.classList.add('hidden');
+            previewContainer.innerHTML = '';
+        }
+    }
+
+    function sendMessageUser() {
+        console.log('[sendMessageUser] chaqirildi');
+        const textInput = document.getElementById('messageInputUser');
+        const text = textInput.value.trim();
+
+        if (!text && !selectedFileUser) {
+            console.log('[sendMessageUser] Yuborish uchun matn yoki rasm yo\'q.');
+            showCustomModal('Xabar yoki rasm bo\'lishi shart!');
+            return;
+        }
+
+        const newMessage = {
+            id: Date.now(),
+            user: 'user',
+            text: text || null,
+            imageUrl: null,
+            timestamp: new Date().toLocaleString('uz-UZ', { hour12: false })
+        };
+
+        if (selectedFileUser) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                newMessage.imageUrl = e.target.result; // Store Base64 string
+                chatMessages.push(newMessage); // Add to in-memory array
+                textInput.value = '';
+                clearImagePreview('User');
+                loadChatMessagesUser();
+                const chatContainer = document.getElementById('chatMessagesUser');
+                if(chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+            reader.readAsDataURL(selectedFileUser);
+        } else {
+            chatMessages.push(newMessage); // Add to in-memory array
+            textInput.value = '';
+            clearImagePreview('User');
+            loadChatMessagesUser();
+            const chatContainer = document.getElementById('chatMessagesUser');
+            if(chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    }
+
+    function loadChatMessagesUser() {
+        const container = document.getElementById('chatMessagesUser');
+        if (!container) {
+            console.error('[loadChatMessagesUser] chatMessagesUser elementi topilmadi.');
+            return;
+        }
+
+        const isScrolledToBottom = container.scrollHeight - container.clientHeight <= container.scrollTop + 10;
+        container.innerHTML = '';
+
+        if (!chatMessages || chatMessages.length === 0) {
+            const welcomeMsgDiv = document.createElement('div');
+            welcomeMsgDiv.className = 'message-bubble tech';
+            welcomeMsgDiv.innerHTML = `<p>Salom! Sizga qanday yordam bera olaman?</p><span class="timestamp">${new Date().toLocaleTimeString('uz-UZ', {hour: '2-digit', minute: '2-digit'})}</span>`;
+            container.appendChild(welcomeMsgDiv);
+        } else {
+            chatMessages.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message-bubble', msg.user === 'user' ? 'user' : 'tech');
+
+                let messageContent = '';
+                if (msg.text) {
+                    const linkedText = msg.text.replace(/(https?:\/\/[^\s!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">$1</a>');
+                    messageContent += `<p class="mb-1">${linkedText}</p>`;
+                }
+                if (msg.imageUrl) {
+                    messageContent += `<img src="${msg.imageUrl}" alt="Chatdagi rasm" class="chat-image cursor-pointer w-full h-auto object-cover rounded-lg" onclick="openImageModal('${msg.imageUrl}')" onerror="this.onerror=null;this.src='https://placehold.co/150x100/FF0000/FFFFFF?text=Rasm+Yuklanmadi';">`;
+                }
+                const displayTimestamp = msg.timestamp || new Date(msg.id).toLocaleTimeString('uz-UZ', {hour: '2-digit', minute: '2-digit'});
+                messageContent += `<span class="timestamp text-xs text-gray-500 mt-1 block ${msg.user === 'user' ? 'text-right' : 'text-left'}">${displayTimestamp}</span>`;
+
+                messageDiv.innerHTML = messageContent;
+                container.appendChild(messageDiv);
+            });
+        }
+
+        if (isScrolledToBottom || chatMessages.length < 5 ) {
+            container.scrollTop = container.scrollHeight;
+        }
+    }
+
+    function loadWorkingHoursUser() {
+        console.log('[loadWorkingHoursUser] chaqirildi');
+        const display = document.getElementById('currentWorkingHoursUser');
+        if (!display) {
+            console.error('[loadWorkingHoursUser] currentWorkingHoursUser elementi topilmadi.');
+            return;
+        }
+
+        const wh = settingsData.workingHours; // Get from in-memory data
+        const daysText = {
+            'dush-juma': 'Dushanba - Juma',
+            'dush-shan': 'Dushanba - Shanba',
+            'har-kun': 'Har kuni'
+        };
+        display.textContent = `${daysText[wh.days] || wh.days || 'Noma\'lum'}: ${wh.startTime || '--:--'} - ${wh.endTime || '--:--'}`;
+    }
+
+    function openImageModal(imageUrl) {
+        console.log('[openImageModal] chaqirildi, URL:', imageUrl);
+        const modal = document.createElement('div');
+        modal.style.position = 'fixed';
+        modal.style.left = '0';
+        modal.style.top = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.backgroundColor = 'rgba(0,0,0,0.85)';
+        modal.style.display = 'flex';
+        modal.style.justifyContent = 'center';
+        modal.style.alignItems = 'center';
+        modal.style.zIndex = '2000';
+        modal.style.cursor = 'zoom-out';
+        modal.onclick = (e) => {
+            if (e.target === modal) {
+                document.body.removeChild(modal);
+                console.log('[openImageModal] Modal yopildi.');
+            }
+        };
+
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.style.maxWidth = '90%';
+        img.style.maxHeight = '90%';
+        img.style.border = '3px solid white';
+        img.style.borderRadius = '5px';
+        img.style.boxShadow = '0 0 25px rgba(0,0,0,0.5)';
+        img.style.objectFit = 'contain';
+        img.style.cursor = 'default';
+
+        modal.appendChild(img);
+        document.body.appendChild(modal);
+        console.log('[openImageModal] Modal ko\'rsatildi.');
+    }
+
+    function showCustomModal(message, callback = null, infoOnly = false) {
+        const existingModal = document.getElementById('custom-alert-modal');
+        if (existingModal) existingModal.remove();
+
+        const modal = document.createElement('div');
+        modal.id = 'custom-alert-modal';
+        modal.className = 'fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[9999] p-4';
+        modal.innerHTML = `
+            <div class="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full text-center transform scale-95 opacity-0 transition-all duration-300 ease-out">
+                <p class="text-lg font-semibold text-gray-800 mb-6">${message}</p>
+                <div class="flex justify-center space-x-4">
+                    ${infoOnly ? `
+                        <button id="modal-ok-btn" class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200">OK</button>
+                    ` : `
+                        <button id="modal-confirm-btn" class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200">Tasdiqlash</button>
+                        <button id="modal-cancel-btn" class="px-6 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors duration-200">Bekor qilish</button>
+                    `}
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        setTimeout(() => {
+            modal.querySelector('div').classList.remove('scale-95', 'opacity-0');
+            modal.querySelector('div').classList.add('scale-100', 'opacity-100');
+        }, 10);
+
+        const closeAndCallback = (result) => {
+            modal.querySelector('div').classList.remove('scale-100', 'opacity-100');
+            modal.querySelector('div').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.remove();
+                if (callback) callback(result);
+            }, 300);
+        };
+
+        if (infoOnly) {
+            document.getElementById('modal-ok-btn').onclick = () => closeAndCallback(true);
+        } else {
+            document.getElementById('modal-confirm-btn').onclick = () => closeAndCallback(true);
+            document.getElementById('modal-cancel-btn').onclick = () => closeAndCallback(false);
+        }
+    }
+</script>
 </body>
 </html>
